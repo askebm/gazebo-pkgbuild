@@ -7,7 +7,7 @@ pkgdesc='Scene-oriented, flexible 3D engine written in C++'
 arch=('x86_64')
 url='http://www.ogre3d.org'
 license=('custom:MIT')
-depends=('freeimage' 'libxaw' 'libxrandr' 'openexr'
+depends=('freeimage' 'freetype2' 'libxaw' 'libxrandr' 'openexr'
          'nvidia-cg-toolkit' 'zziplib' 'sdl2' 'glu' 'tinyxml')
 conflicts=('ogre' 'ogre-docs')
 makedepends=('cmake' 'doxygen' 'graphviz' 'ttf-dejavu' 'mesa' 'python' 'swig' 'systemd' 'java-environment')
