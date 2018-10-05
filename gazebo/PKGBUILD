@@ -35,7 +35,9 @@ sha256sums=('8a42cf1e5c9cd358fd03e71cf8e00651af8d0ff15793a6942d387d555525c423')
 build() {
   cd "${srcdir}/osrf-gazebo-04a40b564570"
 
-  sudo ln -fs /usr/include/boost/uuid/detail/sha1.hpp /usr/include/boost/uuid/sha1.hpp
+  if [ ! -f /usr/include/boost/uuid/sha1.hpp ]; then
+   sudo ln -s /usr/include/boost/uuid/detail/sha1.hpp /usr/include/boost/uuid/sha1.hpp
+  fi
 
   mkdir -p build && cd build
 
