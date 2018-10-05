@@ -1,0 +1,70 @@
+# Maintainer: Sven-Hendrik Haase <sh@lutzhaase.com>
+pkgbase=ogre1-10
+pkgname=('ogre1-10' 'ogre-docs1-10')
+pkgver=1.10.12
+pkgrel=2
+pkgdesc='Scene-oriented, flexible 3D engine written in C++'
+arch=('x86_64')
+url='http://www.ogre3d.org'
+license=('custom:MIT')
+depends=('freeimage' 'libxaw' 'libxrandr' 'openexr'
+         'nvidia-cg-toolkit' 'zziplib' 'sdl2' 'glu' 'tinyxml')
+conflicts=('ogre' 'ogre-docs')
+makedepends=('cmake' 'doxygen' 'graphviz' 'ttf-dejavu' 'mesa' 'python' 'swig' 'systemd' 'java-environment')
+install=ogre.install
+source=("https://github.com/OGRECave/ogre/archive/v${pkgver}.tar.gz")
+sha512sums=('c2a16b7b80759b1ee02cd95bce6dc8fa21d66148aa3573b54cc6ee42b29a3ca389aeb2e1c74fb24ef2d08fd60b8758ea71a08f4279b34b77ca5d11e95310ab65')
+
+build() {
+  cd ogre-${pkgver}
+
+  [[ -d build ]] && rm -rf build
+  mkdir build && cd build
+
+  export JAVA_HOME=/usr/lib/jvm/default
+
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DOGRE_BUILD_DEPENDENCIES=FALSE \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DOGRE_BUILD_PLUGIN_FREEIMAGE=TRUE \
+    -DOGRE_BUILD_PLUGIN_EXRCODEC=TRUE
+
+  make
+  make OgreDoc
+}
+
+package_ogre1-10() {
+  optdepends=('cppunit: unit testing'
+              'python: python bindings'
+              'java-environment: jni bindings'
+              'ogre-docs1-10: documentation')
+
+  cd ogre-${pkgver}/build
+
+  make DESTDIR=${pkgdir} install
+
+  mv ${pkgdir}/usr/bin/SampleBrowser ${pkgdir}/usr/bin/OgreSampleBrowser
+  install -Dm644 ../LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+
+  # move docs out of this package
+  mv ${pkgdir}/usr/share/OGRE/docs ${srcdir}/docs
+}
+
+package_ogre-docs1-10() {
+  pkgdesc="Documentation for ogre1-10"
+  depends=()
+
+  cd ogre-${pkgver}/build
+
+  # move docs into this package
+  install -dm755 ${pkgdir}/usr/share/doc
+  mv ${srcdir}/docs ${pkgdir}/usr/share/doc/OGRE/
+
+  # symlink for docs
+  install -dm755 ${pkgdir}/usr/share/OGRE/
+  cd ${pkgdir}/usr/share
+  ln -s /usr/share/doc/OGRE/ OGRE/docs
+}
+
+# vim:set ts=2 sw=2 et:
