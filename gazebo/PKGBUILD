@@ -40,7 +40,7 @@ prepare() {
 }
 
 build() {
-  cd "${srcdir}/osrf-gazebo-04a40b564570"
+  cd "${srcdir}/osrf-gazebo-"*
 
   if [ ! -f /usr/include/boost/uuid/sha1.hpp ]; then
    sudo ln -s /usr/include/boost/uuid/detail/sha1.hpp /usr/include/boost/uuid/sha1.hpp
@@ -58,7 +58,8 @@ build() {
 package() {
   mkdir -p ${pkgdir}/etc/ld.so.conf.d
   echo "/usr/lib/gazebo-9/plugins" > ${pkgdir}/etc/ld.so.conf.d/gazebo.conf
-  cd "${srcdir}/osrf-gazebo-04a40b564570/build"
+  cd "${srcdir}/osrf-gazebo-"*
+  cd "build"
   make DESTDIR="${pkgdir}" install
 }
 
