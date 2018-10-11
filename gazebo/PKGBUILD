@@ -29,8 +29,15 @@ optdepends=('bullet: Bullet support'
 makedepends=('cmake' 'doxygen')
 conflicts=('gazebo')
 install="${pkgname}.install"
-source=("https://bitbucket.org/osrf/gazebo/get/gazebo9_${pkgver}.tar.bz2")
-sha256sums=('8a42cf1e5c9cd358fd03e71cf8e00651af8d0ff15793a6942d387d555525c423')
+source=("https://bitbucket.org/osrf/gazebo/get/gazebo9_${pkgver}.tar.bz2"
+         "gazebo.patch")
+sha256sums=('8a42cf1e5c9cd358fd03e71cf8e00651af8d0ff15793a6942d387d555525c423'
+            '3b18eb57241c80bc57498d282dd26da7377396d7ffdb7984cc2e3262a9d74fc4')
+
+prepare() {
+  cd "${srcdir}/osrf-gazebo-"*
+  patch -p1 -i "${srcdir}/gazebo.patch"
+}
 
 build() {
   cd "${srcdir}/osrf-gazebo-04a40b564570"
