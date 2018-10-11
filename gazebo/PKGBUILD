@@ -49,6 +49,8 @@ build() {
 }
 
 package() {
+  mkdir -p ${pkgdir}/etc/ld.so.conf.d
+  echo "/usr/lib/gazebo-9/plugins" > ${pkgdir}/etc/ld.so.conf.d/gazebo.conf
   cd "${srcdir}/osrf-gazebo-04a40b564570/build"
   make DESTDIR="${pkgdir}" install
 }
